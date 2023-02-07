@@ -1,18 +1,18 @@
 {
-	"name": "run-on-save",
+	"name": "coderunr-vscode",
 	"displayName": "Run on Save",
 	"description": "Run configured shell commands when a file is saved in vscode, and output configured messages on status bar.",
 	"icon": "images/logo.png",
 	"version": "1.5.1",
 	"license": "MIT",
-	"publisher": "pucelle",
-	"homepage": "https://github.com/pucelle/vscode-run-on-save",
+	"publisher": "traceypooh",
+	"homepage": "https://github.com/internetarchive/coderunr-vscode",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/pucelle/vscode-run-on-save"
+		"url": "https://github.com/internetarchive/coderunr-vscode"
 	},
 	"bugs": {
-		"url": "https://github.com/pucelle/vscode-run-on-save/issues"
+		"url": "https://github.com/internetarchive/coderunr-vscode/issues"
 	},
 	"engines": {
 		"vscode": "^1.30.0"
