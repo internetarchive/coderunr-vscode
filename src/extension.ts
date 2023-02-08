@@ -10,11 +10,11 @@ export function activate(context: vscode.ExtensionContext): RunOnSaveExtension {
 			extension.loadConfig()
 		}),
 
-		vscode.commands.registerCommand('extension.enableRunOnSave', () => {
+		vscode.commands.registerCommand('extension.enableCodeRunr', () => {
 			extension.setEnabled(true)
 		}),
 
-		vscode.commands.registerCommand('extension.disableRunOnSave', () => {
+		vscode.commands.registerCommand('extension.disableCodeRunr', () => {
 			extension.setEnabled(false)
 		}),
 

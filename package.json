@@ -1,11 +1,11 @@
 {
 	"name": "coderunr-vscode",
-	"displayName": "Run on Save",
-	"description": "Run configured shell commands when a file is saved in vscode, and output configured messages on status bar.",
+	"displayName": "CodeRunr",
+	"description": "Runs configured CI/CD commands when a file is saved in vscode, and output configured messages on status bar.",
 	"icon": "images/logo.png",
-	"version": "1.5.1",
+	"version": "1.6.0",
 	"license": "MIT",
-	"publisher": "traceypooh",
+	"publisher": "internetarchive",
 	"homepage": "https://github.com/internetarchive/coderunr-vscode",
 	"repository": {
 		"type": "git",
@@ -21,11 +21,9 @@
 		"Other"
 	],
 	"keywords": [
-		"run on save",
-		"save and run",
-		"compile scss on save",
-		"compile less on save",
-		"compile files on save"
+		"CodeRunr",
+		"continuous deployment",
+		"CI/CD on save"
 	],
 	"activationEvents": [
 		"*"
@@ -34,29 +32,34 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.enableRunOnSave",
-				"title": "Run On Save: Enable"
+				"command": "extension.enableCodeRunr",
+				"title": "CodeRunr: Enable"
 			},
 			{
-				"command": "extension.disableRunOnSave",
-				"title": "Run On Save: Disable"
+				"command": "extension.disableCodeRunr",
+				"title": "CodeRunr: Disable"
 			}
 		],
 		"configuration": {
-			"title": "Run On Save",
+			"title": "CodeRunr",
 			"type": "object",
 			"properties": {
-				"runOnSave.statusMessageTimeout": {
+				"CodeRunr.server": {
+					"type": "string",
+					"description": "server hostname to `ssh` into that is running coderunr docker image.  See https://coderunr.com/",
+					"default": "example.com"
+				},
+				"CodeRunr.statusMessageTimeout": {
 					"type": "number",
 					"description": "Sepcify the timeout in millisecond after which the status message will be hidden. Works when `runIn=backend`, can be overwriten by the `statusMessageTimeout` in each command.",
 					"default": 3000
 				},
-				"runOnSave.shell": {
+				"CodeRunr.shell": {
 					"type": "string",
 					"description": "Specify what shell will be used for all the commands. Default is vscode's default shell.",
 					"default": null
 				},
-				"runOnSave.commands": {
+				"CodeRunr.commands": {
 					"type": "array",
 					"description": "Shell commands array.",
 					"default": [],
@@ -86,7 +89,7 @@
 							"command": {
 								"type": "string",
 								"description": "Specify the command to be executed after file saved.",
-								"default": "echo ${file}"
+								"default": "cd '${workspaceFolder}'  &&  export CLONE=$(git config --get remote.origin.url)  BRANCH=$(git rev-parse --abbrev-ref HEAD)  && cat '${file}' | ssh ${config:CodeRunr.server} 'export INCOMING=$(mktemp) CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/deploy.sh'  &&  echo SUCCESS"
 							},
 							"runIn": {
 								"type": "string",
@@ -111,12 +114,12 @@
 							"runningStatusMessage": {
 								"type": "string",
 								"description": "Specify the status bar message when the shell command began to run. Only works when `runIn=backend`.",
-								"default": ""
+								"default": "🔺🔺🔺 SAVING 🔺🔺🔺"
 							},
 							"finishStatusMessage": {
 								"type": "string",
 								"description": "Specify the status bar message after the shell command finished executing. Only works when `runIn=backend`.",
-								"default": ""
+								"default": "Saved ✅"
 							},
 							"statusMessageTimeout": {
 								"type": "number",

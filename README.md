@@ -1,6 +1,6 @@
 <h1 align="left">
-    <img src="https://github.com/pucelle/vscode-run-on-save/raw/master/images/logo.png" width="30" height="30" alt="a save logo" />
-    Run on Save - VSCode Extension
+    <img src="https://github.com/internetarchive/coderunr-vscode/raw/master/images/logo.png" width="86" height="32" alt="a save logo" />
+    CodeRunr - VSCode Extension
 </h1>
 
 Configure shell commands and related file patterns, commands will be executed when matched files were saved.
@@ -23,9 +23,9 @@ If you need to run VS Code's commands change `runIn` option to `vscode`
 
 | Name                             | Description
 | ---                              | ---
-| `runOnSave.statusMessageTimeout` | Specify the timeout millisecond after which the status bar message will hide, default value is `3000`, means 3 seconds.
-| `runOnSave.commands`             | Specify the array of shell commands to execute and related info, its child options as below.
-| `runOnSave.shell`                | Specify in which shell the commands are executed, defaults to the default vscode shell.
+| `CodeRunr.statusMessageTimeout` | Specify the timeout millisecond after which the status bar message will hide, default value is `3000`, means 3 seconds.
+| `CodeRunr.commands`             | Specify the array of shell commands to execute and related info, its child options as below.
+| `CodeRunr.shell`                | Specify in which shell the commands are executed, defaults to the default vscode shell.
 
 
 ### Command Options
@@ -51,8 +51,8 @@ If you need to run VS Code's commands change `runIn` option to `vscode`
 
 ```js
 {
-    "runOnSave.statusMessageTimeout": 3000,
-    "runOnSave.commands": [
+    "CodeRunr.statusMessageTimeout": 3000,
+    "CodeRunr.commands": [
         {
             // Match scss files except names start with `_`.
             "match": ".*\\.scss$",
@@ -106,15 +106,17 @@ For more details please refer to [VSCode Tasks](https://code.visualstudio.com/do
 
 The following commands are exposed in the command palette
 
-- `Run On Save: Enable` - to enable the extension
-- `Run On Save: Disable` - to disable the extension
+- `CodeRunr: Enable` - to enable the extension
+- `CodeRunr: Disable` - to disable the extension
 
 
 ## References
 
 This plugin inspired from these plugins:
 
-[vscode-runonsave](https://github.com/emeraldwalk/vscode-runonsave) and [vscode-save-and-run](https://github.com/wk-j/vscode-save-and-run).
+- [vscode-run-on-save](https://github.com/pucelle/vscode-run-on-save)
+- [vscode-runonsave](https://github.com/emeraldwalk/vscode-runonsave)
+- [vscode-save-and-run](https://github.com/wk-j/vscode-save-and-run)
 
 
 ## License

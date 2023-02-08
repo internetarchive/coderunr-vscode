@@ -14,7 +14,7 @@ export class RunOnSaveExtension {
 
 	private context: vscode.ExtensionContext
 	private config!: vscode.WorkspaceConfiguration
-	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('Run on Save')
+	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('CodeRunr')
 	private commandProcessor: CommandProcessor = new CommandProcessor()
 
 	constructor(context: vscode.ExtensionContext) {
@@ -27,12 +27,12 @@ export class RunOnSaveExtension {
 
 	/** Load or reload configuration. */
 	loadConfig() {
-		this.config = vscode.workspace.getConfiguration('runOnSave')
+		this.config = vscode.workspace.getConfiguration('CodeRunr')
 		this.commandProcessor.setRawCommands(<RawCommand[]>this.config.get('commands') || [])
 	}
 
 	private showEnablingChannelMessage () {
-		let message = `Run on Save is ${this.getEnabled() ? 'enabled' : 'disabled'}`
+		let message = `CodeRunr is ${this.getEnabled() ? 'enabled' : 'disabled'}`
 		this.showChannelMessage(message)
 		this.showStatusMessage(message)
 	}
@@ -40,7 +40,7 @@ export class RunOnSaveExtension {
 	private showChannelMessage(message: string) {
 		this.channel.appendLine(message)
 	}
-	
+
 	getEnabled(): boolean {
 		return !!this.context.globalState.get('enabled', true)
 	}
@@ -117,16 +117,16 @@ export class RunOnSaveExtension {
 			if (command.runningStatusMessage) {
 				this.showStatusMessage(command.runningStatusMessage, command.statusMessageTimeout)
 			}
-	
+
 			let child = this.execShellCommand(command.command, command.workingDirectoryAsCWD ?? true)
 			child.stdout.on('data', data => this.channel.append(data.toString()))
 			child.stderr.on('data', data => this.channel.append(data.toString()))
-	
+
 			child.on('exit', (e) => {
 				if (e === 0 && command.finishStatusMessage) {
 					this.showStatusMessage(command.finishStatusMessage, command.statusMessageTimeout)
 				}
-	
+
 				if (e !== 0) {
 					this.channel.show(true)
 				}
@@ -168,7 +168,7 @@ export class RunOnSaveExtension {
 	}
 
 	private createTerminal(): vscode.Terminal {
-		let terminalName = 'Run on Save'
+		let terminalName = 'CodeRunr'
 		let terminal = vscode.window.terminals.find(terminal => terminal.name === terminalName)
 
 		if (!terminal) {
