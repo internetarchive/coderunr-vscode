@@ -3,7 +3,7 @@
 	"displayName": "CodeRunr",
 	"description": "Runs configured CI/CD commands when a file is saved in vscode, and output configured messages on status bar.",
 	"icon": "images/logo.png",
-	"version": "1.6.1",
+	"version": "1.6.2",
 	"license": "MIT",
 	"publisher": "internetarchive",
 	"homepage": "https://github.com/internetarchive/coderunr-vscode",
@@ -49,10 +49,15 @@
 					"description": "server hostname to `ssh` into that is running coderunr docker image.  See https://coderunr.com/",
 					"default": "example.com"
 				},
+				"CodeRunr.match": {
+					"type": "string",
+					"description": "Specify a RegExp source to match file path.",
+					"default": "/dev/"
+				},
 				"CodeRunr.statusMessageTimeout": {
 					"type": "number",
 					"description": "Sepcify the timeout in millisecond after which the status message will be hidden. Works when `runIn=backend`, can be overwriten by the `statusMessageTimeout` in each command.",
-					"default": 3000
+					"default": 600000
 				},
 				"CodeRunr.shell": {
 					"type": "string",
@@ -62,7 +67,14 @@
 				"CodeRunr.commands": {
 					"type": "array",
 					"description": "Shell commands array.",
-					"default": [],
+					"default": [{
+						"match": "${config:CodeRunr.match}",
+						"command": "cd '${workspaceFolder}'  &&  export CLONE=$(git config --get remote.origin.url)  BRANCH=$(git rev-parse --abbrev-ref HEAD)  && cat '${file}' | ssh ${config:CodeRunr.server} 'export INCOMING=$(mktemp) CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/deploy.sh'  &&  echo SUCCESS",
+						"runIn": "backend",
+						"runningStatusMessage": "🔺🔺🔺 SAVING 🔺🔺🔺",
+						"finishStatusMessage": "Saved ✅",
+						"async": false
+					}],
 					"items": {
 						"type": "object",
 						"properties": {
@@ -89,7 +101,7 @@
 							"command": {
 								"type": "string",
 								"description": "Specify the command to be executed after file saved.",
-								"default": "cd '${workspaceFolder}'  &&  export CLONE=$(git config --get remote.origin.url)  BRANCH=$(git rev-parse --abbrev-ref HEAD)  && cat '${file}' | ssh ${config:CodeRunr.server} 'export INCOMING=$(mktemp) CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/deploy.sh'  &&  echo SUCCESS"
+								"default": "echo ${file}"
 							},
 							"runIn": {
 								"type": "string",
