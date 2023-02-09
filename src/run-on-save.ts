@@ -29,20 +29,22 @@ export class RunOnSaveExtension {
 	loadConfig() {
 		this.config = vscode.workspace.getConfiguration('CodeRunr')
 
-		const command_default = {
+		const command_default: RawCommand = {
 
 			"command": "cd '${workspaceFolder}'  &&  export CLONE=$(git config --get remote.origin.url)  BRANCH=$(git rev-parse --abbrev-ref HEAD)  && cat '${file}' | ssh " +
 			this.config.get('server') +
 			" 'export INCOMING=$(mktemp) CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/run.sh'  &&  echo SUCCESS",
 
-			"match": this.config.get('match'),
-			"runIn": this.config.get('runIn'),
-			"async": this.config.get('async'),
-			"runningStatusMessage": this.config.get('runningStatusMessage'),
-			"finishStatusMessage": this.config.get('finishStatusMessage'),
+			"match": this.config.get('match') || "",
+			"runIn": this.config.get('runIn') || "",
+			"async": this.config.get('async') || false,
+			"notMatch": "",
+			"globMatch": "",
+			"runningStatusMessage": this.config.get('runningStatusMessage') || "",
+			"finishStatusMessage": this.config.get('finishStatusMessage') || "",
 		}
 
-		let commands = this.config.get('commands') || []
+		let commands: RawCommand[] = this.config.get('commands') || []
 		if (!commands.length)
 			commands = [command_default]
 
