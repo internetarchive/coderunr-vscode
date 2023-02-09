@@ -28,11 +28,31 @@ export class RunOnSaveExtension {
 	/** Load or reload configuration. */
 	loadConfig() {
 		this.config = vscode.workspace.getConfiguration('CodeRunr')
-		this.commandProcessor.setRawCommands(<RawCommand[]>this.config.get('commands') || [])
+
+		const command_default = {
+
+			"command": "cd '${workspaceFolder}'  &&  export CLONE=$(git config --get remote.origin.url)  BRANCH=$(git rev-parse --abbrev-ref HEAD)  && cat '${file}' | ssh " +
+			this.config.get('server') +
+			" 'export INCOMING=$(mktemp) CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/run.sh'  &&  echo SUCCESS",
+
+			"match": this.config.get('match'),
+			"runIn": this.config.get('runIn'),
+			"async": this.config.get('async'),
+			"runningStatusMessage": this.config.get('runningStatusMessage'),
+			"finishStatusMessage": this.config.get('finishStatusMessage'),
+		}
+
+		let commands = this.config.get('commands') || []
+		if (!commands.length)
+			commands = [command_default]
+
+		commands = commands.map((e) => Object.keys(e).length ? e : command_default)
+
+		this.commandProcessor.setRawCommands(<RawCommand[]>commands)
 	}
 
 	private showEnablingChannelMessage () {
-		let message = `CodeRunr is ${this.getEnabled() ? 'enabled' : 'disabled'}`
+		const message = `CodeRunr is ${this.getEnabled() ? 'enabled' : 'disabled'}`
 		this.showChannelMessage(message)
 		this.showStatusMessage(message)
 	}
@@ -52,7 +72,7 @@ export class RunOnSaveExtension {
 
 	private showStatusMessage(message: string, timeout?: number) {
 		timeout = timeout || this.config.get('statusMessageTimeout') || 3000
-		let disposable = vscode.window.setStatusBarMessage(message, timeout)
+		const disposable = vscode.window.setStatusBarMessage(message, timeout)
 		this.context.subscriptions.push(disposable)
 	}
 
@@ -62,7 +82,7 @@ export class RunOnSaveExtension {
 			return
 		}
 
-		let commandsToRun = this.commandProcessor.prepareCommandsForFileBeforeSaving(document.fileName)
+		const commandsToRun = this.commandProcessor.prepareCommandsForFileBeforeSaving(document.fileName)
 		if (commandsToRun.length > 0) {
 			await this.runCommands(commandsToRun)
 		}
@@ -73,25 +93,25 @@ export class RunOnSaveExtension {
 			return
 		}
 
-		let commandsToRun = this.commandProcessor.prepareCommandsForFileAfterSaving(document.fileName)
+		const commandsToRun = this.commandProcessor.prepareCommandsForFileAfterSaving(document.fileName)
 		if (commandsToRun.length > 0) {
 			await this.runCommands(commandsToRun)
 		}
 	}
 
 	private async runCommands(commands: (BackendCommand | TerminalCommand | VSCodeCommand)[]) {
-		let promises: Promise<void>[] = []
-		let syncCommands = commands.filter(c => !c.async)
-		let asyncCommands = commands.filter(c => c.async)
+		const promises: Promise<void>[] = []
+		const syncCommands = commands.filter(c => !c.async)
+		const asyncCommands = commands.filter(c => c.async)
 
 		// Run commands in a parallel.
-		for (let command of asyncCommands) {
-			let promise = this.runACommand(command)
+		for (const command of asyncCommands) {
+			const promise = this.runACommand(command)
 			promises.push(promise)
 		}
 
 		// Run commands in series.
-		for (let command of syncCommands) {
+		for (const command of syncCommands) {
 			await this.runACommand(command)
 		}
 
@@ -118,7 +138,7 @@ export class RunOnSaveExtension {
 				this.showStatusMessage(command.runningStatusMessage, command.statusMessageTimeout)
 			}
 
-			let child = this.execShellCommand(command.command, command.workingDirectoryAsCWD ?? true)
+			const child = this.execShellCommand(command.command, command.workingDirectoryAsCWD ?? true)
 			child.stdout.on('data', data => this.channel.append(data.toString()))
 			child.stderr.on('data', data => this.channel.append(data.toString()))
 
@@ -137,9 +157,9 @@ export class RunOnSaveExtension {
 	}
 
 	private execShellCommand(command: string, workingDirectoryAsCWD: boolean): ChildProcess {
-		let cwd = workingDirectoryAsCWD ? vscode.workspace.rootPath : undefined
+		const cwd = workingDirectoryAsCWD ? vscode.workspace.rootPath : undefined
 
-		let shell = this.getShellPath()
+		const shell = this.getShellPath()
 		if (shell) {
 			return exec(command, {
 				shell,
@@ -158,7 +178,7 @@ export class RunOnSaveExtension {
 	}
 
 	private async runTerminalCommand(command: TerminalCommand) {
-		let terminal = this.createTerminal()
+		const terminal = this.createTerminal()
 
 		terminal.show()
 		terminal.sendText(command.command)
@@ -168,7 +188,7 @@ export class RunOnSaveExtension {
 	}
 
 	private createTerminal(): vscode.Terminal {
-		let terminalName = 'CodeRunr'
+		const terminalName = 'CodeRunr'
 		let terminal = vscode.window.terminals.find(terminal => terminal.name === terminalName)
 
 		if (!terminal) {
