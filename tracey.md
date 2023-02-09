@@ -1,6 +1,10 @@
 
 # helpful hints for updating this extension
 
+- https://marketplace.visualstudio.com/items?itemName=InternetArchive.coderunr-vscode
+- https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+
+
 ```sh
 # basic lint file(s)
 deno lint -c $HOME/dev/eslint/deno.json  src/run-on-save.ts
