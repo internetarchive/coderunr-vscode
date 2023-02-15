@@ -6,6 +6,7 @@ import {timeout} from './util'
 
 export interface Configuration {
 	statusMessageTimeout: number
+	// deno-lint-ignore ban-types
 	shell: String
 	commands: RawCommand
 }
