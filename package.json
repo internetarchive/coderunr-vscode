@@ -3,7 +3,7 @@
 	"displayName": "CodeRunr",
 	"description": "Runs configured CI/CD commands when a file is saved in vscode, and output configured messages on status bar.",
 	"icon": "images/logo.png",
-	"version": "1.6.3",
+	"version": "1.6.4",
 	"license": "MIT",
 	"publisher": "internetarchive",
 	"homepage": "https://github.com/internetarchive/coderunr-vscode",
@@ -62,7 +62,7 @@
 				"CodeRunr.verbose": {
 					"type": "boolean",
 					"description": "Do more verbose logging during the saved file sync to server.",
-					"default": false,
+					"default": false
 				},
 				"CodeRunr.shell": {
 					"type": "string",
