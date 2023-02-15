@@ -3,8 +3,33 @@
     CodeRunr - VSCode Extension
 </h1>
 
-Configure shell commands and related file patterns, commands will be executed when matched files were saved.
+Deploy saved changes to websites -- _without_ git commits, pushes & full CI/CD.
 
+Configure shell commands and related file patterns -- commands will be executed when matched files are saved.
+
+## CodeRunr project
+An admin sets up a CodeRunr Server on a VM that you can `ssh` into (there is also an alternate way to use a web page instead of `ssh` to track your files as they change).
+- https://coderunr.com/
+- https://github.com/internetarchive/coderunr
+
+This extension will then make it so every file saved (that matches your configured file name patterns) will get copied up to the CodeRunr Server.  The server will run setup, optional build hooks and more, and give you a unique https:// url, per branch, to rapidly develop with.
+
+
+- Configure this VSCode extension's Settings:
+```json
+// Change `example.com` to your `ssh`-able CodeRunr Server.
+"CodeRunr.server": "example.com",
+// Change this to your desired file regex pattern.
+// Here any file's full path that matches either 'dev/' or 'petabox' will get sync-ed.
+"CodeRunr.match": "dev/|petabox",
+```
+
+---
+
+## Addional Customizations
+You can also customize further and/or setup additional "run on save" arbitrary commands if you like.
+
+Continue reading for more details.
 
 ## Features
 

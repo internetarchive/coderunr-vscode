@@ -33,7 +33,8 @@ export class RunOnSaveExtension {
 
 			"command": "cd '${workspaceFolder}'  &&  export CLONE=$(git config --get remote.origin.url)  BRANCH=$(git rev-parse --abbrev-ref HEAD)  && cat '${file}' | ssh " +
 			this.config.get('server') +
-			" 'export INCOMING=$(mktemp) CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/run.sh'  &&  echo SUCCESS",
+			" 'export INCOMING=$(mktemp) VERBOSE=" + (this.config.get('verbose') ? '' : '1') +
+			" CLONE='$CLONE' BRANCH='$BRANCH' \"FILE=${fileRelative}\"  &&  cat >| $INCOMING  &&  /coderunr/run.sh'  &&  echo SUCCESS",
 
 			"match": this.config.get('match') || "",
 			"runIn": this.config.get('runIn') || "",

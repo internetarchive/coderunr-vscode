@@ -59,6 +59,11 @@
 					"description": "Sepcify the timeout in millisecond after which the status message will be hidden. Works when `runIn=backend`, can be overwriten by the `statusMessageTimeout` in each command.",
 					"default": 600000
 				},
+				"CodeRunr.verbose": {
+					"type": "boolean",
+					"description": "Do more verbose logging during the saved file sync to server.",
+					"default": false,
+				},
 				"CodeRunr.shell": {
 					"type": "string",
 					"description": "Specify what shell will be used for all the commands. Default is vscode's default shell.",
@@ -67,7 +72,7 @@
 				"CodeRunr.runningStatusMessage": {
 					"type": "string",
 					"description": "Specify the status bar message when the shell command began to run. Only works when `runIn=backend`.",
-					"default": "🔺 Coderun ᕕ( ᐛ )ᕗ 🔺"
+					"default": "🔺🔺 Coderun ᕕ( ᐛ )ᕗ 🔺🔺"
 				},
 				"CodeRunr.finishStatusMessage": {
 					"type": "string",
